@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, HttpUrl, Field
 
 
 class Token(BaseModel):
@@ -29,3 +29,41 @@ class UserInDB(User):
 
 class UserCreate(BaseUser):
     password: str
+
+
+class BaseIngredient(BaseModel):
+    name: str
+
+
+class Ingredient(BaseIngredient):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class CreateIngredient(BaseIngredient):
+    ...
+
+
+class BaseRecipe(BaseModel):
+    title: str
+    description: str | None = None
+    time_mins: int
+    price: float
+    link: HttpUrl
+    tags: list = []
+    ingredients: list[BaseIngredient] | None = None
+
+
+class Recipe(BaseRecipe):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class CreateRecipe(BaseRecipe):
+    ...
